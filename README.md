@@ -1,3 +1,1 @@
-# trend_notes
-
-A new Flutter project.
+# chartnote
