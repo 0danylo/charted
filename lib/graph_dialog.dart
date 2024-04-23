@@ -1,21 +1,25 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:trend_notes/graph_card.dart';
 import 'package:trend_notes/main.dart';
 
-class GraphDialog extends StatelessWidget {
-  final ValueListenable names;
-  final ValueListenable data;
-  final ValueListenable types;
+class GraphDialog extends StatefulWidget {
+  final List names;
+  final Map data;
+  final Map types;
 
-  GraphDialog(this.names, this.types, this.data, {super.key});
+  const GraphDialog(this.names, this.types, this.data, {super.key});
 
+  @override
+  State<GraphDialog> createState() => GraphDialogState();
+}
+
+class GraphDialogState extends State<GraphDialog> {
   var newGraphName = "";
 
   @override
   Widget build(BuildContext context) {
-    var appState = context.watch<MainPageState>();
+    var appState = context.watch<AppState>();
 
     return AlertDialog(
         content: Column(
@@ -25,24 +29,25 @@ class GraphDialog extends StatelessWidget {
             child: const Text("New Graph")),
         TextFormField(
           decoration: const InputDecoration(labelText: "Name:"),
-          onChanged: (value) => newGraphName = value,
+          onChanged: (value) => setState(() => newGraphName = value)
         ),
         ElevatedButton(
             onPressed: newGraphName == "" ||
-                    appState.names.value.contains(newGraphName)
+                    appState.names.contains(newGraphName)
                 ? null
                 : () {
-                    appState.names.value.add(newGraphName);
-                    appState.types.value[newGraphName] = GraphType.line;
-                    appState.data.value[newGraphName] = Map.of({});
+                    widget.names.add(newGraphName);
+                    widget.types[newGraphName] = GraphType.line;
+                    widget.data[newGraphName] = Map.of(<DateTime, double>{});
                     newGraphName = "018eujosbnd8192er1hue";
                     Navigator.of(context).pop();
+                    appState.notify();
                   },
             child: const Text("Create Graph")),
         Text(
             newGraphName == ""
                 ? "Invalid name"
-                : appState.names.value.contains(newGraphName)
+                : appState.names.contains(newGraphName)
                     ? "Name already used"
                     : "",
             style: const TextStyle(color: Color.fromARGB(195, 255, 0, 0)))
