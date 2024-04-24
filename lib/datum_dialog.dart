@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:provider/provider.dart';
+import 'package:trend_notes/main.dart';
 
 class DatumDialog extends StatefulWidget {
   const DatumDialog({super.key, required this.graphName});
@@ -16,6 +19,8 @@ class DatumDialogState extends State<DatumDialog> {
 
   @override
   Widget build(BuildContext context) {
+    var appState = context.watch<AppState>();
+
     return AlertDialog(
       content: Column(
         children: [
@@ -29,7 +34,8 @@ class DatumDialogState extends State<DatumDialog> {
                     var date = showDatePicker(
                       context: context,
                       firstDate: DateTime.fromMillisecondsSinceEpoch(0),
-                      lastDate: DateTime.now().add(const Duration(days: 365)),
+                      lastDate:
+                          DateTime.now().add(const Duration(days: 365240)),
                     ).then(
                         (value) => setState(() => newDate = value ?? newDate));
                   },
@@ -54,9 +60,10 @@ class DatumDialogState extends State<DatumDialog> {
             decoration: const InputDecoration(labelText: "Value:"),
             keyboardType: const TextInputType.numberWithOptions(
                 signed: true, decimal: true),
-            // inputFormatters: [
-            //   FilteringTextInputFormatter.allow(RegExp(r"[0-9.\-]")),
-            // ],
+            inputFormatters: [
+              // FilteringTextInputFormatter.allow(RegExp(r"[0-9.\-]")),
+              LengthLimitingTextInputFormatter(308),
+            ],
             onChanged: (value) => setState(() {
               var match = RegExp("[+-]?([0-9]*[.])?[0-9]+").firstMatch(value);
               newDatum =
@@ -67,7 +74,14 @@ class DatumDialogState extends State<DatumDialog> {
               onPressed: newDatum == null
                   ? null
                   : () {
+                      appState.data.update(widget.graphName, (value) {
+                        value[DateTime(newDate.year, newDate.month, newDate.day,
+                            newTime.hour, newTime.minute)] = newDatum;
+                        return value;
+                      }, ifAbsent: () => {newDate: newDatum});
+
                       Navigator.of(context).pop();
+                      appState.notify();
                     },
               child: const Text("Okay"))
         ],

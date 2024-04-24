@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:trend_notes/datum_dialog.dart';
 import 'package:trend_notes/graph_card.dart';
 import 'package:trend_notes/graph_dialog.dart';
 
@@ -76,11 +75,4 @@ makeGraphDialog(context, names, types, data) => showDialog(
     context: context,
     builder: (BuildContext context) {
       return GraphDialog(names, types, data);
-    });
-
-makeDatumDialog(context, state, graphName) => showDialog(
-    barrierDismissible: true,
-    context: context,
-    builder: (BuildContext context) {
-      return DatumDialog(graphName: graphName);
     });

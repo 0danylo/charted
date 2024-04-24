@@ -1,5 +1,7 @@
-import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:trend_notes/datum_dialog.dart';
+import 'package:syncfusion_flutter_charts/charts.dart';
+import 'package:syncfusion_flutter_charts/sparkcharts.dart';
 
 enum GraphType {
   line,
@@ -8,16 +10,16 @@ enum GraphType {
 
   getClass(type) {
     if (type == line) {
-      return LineChart;
+      return;
     } else if (type == step) {
-      return LineChart;
+      return;
     } else {
-      return BarChart;
+      return;
     }
   }
 }
 
-class GraphCard extends StatelessWidget {
+class GraphCard extends StatefulWidget {
   GraphCard({
     required this.name,
     required this.type,
@@ -28,27 +30,35 @@ class GraphCard extends StatelessWidget {
   final GraphType type;
   final Map<DateTime, double> data;
 
+  @override
+  State<GraphCard> createState() => GraphCardState();
+}
+
+class GraphCardState extends State<GraphCard> {
   double min = 0.0, max = 0.0;
 
   @override
   Widget build(BuildContext context) {
     prepare();
+    var keys = widget.data.keys.toList();
 
     final theme = Theme.of(context);
     final style = theme.textTheme.displayMedium!.copyWith(
       color: theme.colorScheme.onPrimary,
     );
-
+    print(widget.data);
     return Card(
       elevation: 10,
       color: theme.colorScheme.secondary,
       child: Column(
         children: [
           const Padding(padding: EdgeInsets.all(20.0)),
-          Text(name, style: style),
-          data.isNotEmpty
-              ? LineChart(
-                  getLineChartData(data),
+          Text(widget.name, style: style),
+          widget.data.isNotEmpty
+              ? LineSeries(
+                  xValueMapper: (t, index) =>
+                      widget.data.keys.toList()[index].millisecondsSinceEpoch,
+                  yValueMapper: (t, index) => widget.data.values.toList()[index],
                 )
               : const Text("No data"),
           Row(
@@ -56,9 +66,12 @@ class GraphCard extends StatelessWidget {
               ButtonBar(
                 children: [
                   IconButton(
-                      onPressed: () {}, icon: const Icon(Icons.abc_outlined)),
+                      onPressed: () {
+                        makeDatumDialog(context, widget.name);
+                      },
+                      icon: const Icon(Icons.add)),
                   IconButton(
-                      onPressed: () {}, icon: const Icon(Icons.ac_unit_sharp))
+                      onPressed: () {}, icon: const Icon(Icons.data_array))
                 ],
               )
             ],
@@ -69,12 +82,12 @@ class GraphCard extends StatelessWidget {
   }
 
   prepare() {
-    if (data.isEmpty) return;
-    
-    data.entries.toList().sort((a, b) => a.key.compareTo(b.key));
+    if (widget.data.isEmpty) return;
 
-    min = max = data.values.toList()[0];
-    for (var value in data.values) {
+    widget.data.entries.toList().sort((a, b) => a.key.compareTo(b.key));
+
+    min = max = widget.data.values.toList()[0];
+    for (var value in widget.data.values) {
       if (value < min) {
         min = value;
       }
@@ -84,66 +97,10 @@ class GraphCard extends StatelessWidget {
     }
   }
 
-  getLineChartData(data) {
-    return LineChartData(
-      lineTouchData: const LineTouchData(enabled: false),
-      gridData: const FlGridData(
-        show: false,
-      ),
-      titlesData: FlTitlesData(
-        show: true,
-        leftTitles: AxisTitles(
-          sideTitles: SideTitles(
-            showTitles: true,
-            getTitlesWidget: leftTitleWidgets,
-            reservedSize: 42,
-            interval: 1,
-          ),
-        ),
-        topTitles: const AxisTitles(
-          sideTitles: SideTitles(showTitles: false),
-        ),
-        rightTitles: const AxisTitles(
-          sideTitles: SideTitles(showTitles: false),
-        ),
-      ),
-      borderData: FlBorderData(
-        show: true,
-        border: Border.all(color: const Color(0xff37434d)),
-      ),
-      minX: 0,
-      maxX: 11,
-      minY: 0,
-      maxY: 6,
-      lineBarsData: [
-        LineChartBarData(
-          spots: const [
-            FlSpot(0, 3.44),
-            FlSpot(2.6, 3.44),
-            FlSpot(4.9, 3.44),
-            FlSpot(6.8, 3.44),
-            FlSpot(8, 3.44),
-            FlSpot(9.5, 3.44),
-            FlSpot(11, 3.44),
-          ],
-          isCurved: true,
-          barWidth: 5,
-          isStrokeCapRound: true,
-          dotData: const FlDotData(
-            show: false,
-          ),
-          belowBarData: BarAreaData(
-            show: false,
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget leftTitleWidgets(double value, TitleMeta meta) {
-    return Text(
-      value.toString(),
-      textAlign: TextAlign.left,
-    );
-  }
+  makeDatumDialog(context, graphName) => showDialog(
+      barrierDismissible: true,
+      context: context,
+      builder: (BuildContext context) {
+        return DatumDialog(graphName: graphName);
+      });
 }
