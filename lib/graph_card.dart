@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:trend_notes/datum_dialog.dart';
-import 'package:syncfusion_flutter_charts/charts.dart';
 import 'package:syncfusion_flutter_charts/sparkcharts.dart';
+import 'package:trend_notes/datum_dialog.dart';
 
 enum GraphType {
   line,
@@ -20,7 +19,7 @@ enum GraphType {
 }
 
 class GraphCard extends StatefulWidget {
-  GraphCard({
+  const GraphCard({super.key, 
     required this.name,
     required this.type,
     required this.data,
@@ -46,7 +45,7 @@ class GraphCardState extends State<GraphCard> {
     final style = theme.textTheme.displayMedium!.copyWith(
       color: theme.colorScheme.onPrimary,
     );
-    print(widget.data);
+    
     return Card(
       elevation: 10,
       color: theme.colorScheme.secondary,
@@ -55,10 +54,10 @@ class GraphCardState extends State<GraphCard> {
           const Padding(padding: EdgeInsets.all(20.0)),
           Text(widget.name, style: style),
           widget.data.isNotEmpty
-              ? LineSeries(
-                  xValueMapper: (t, index) =>
+              ? SfSparkLineChart.custom(
+                  xValueMapper: (index) =>
                       widget.data.keys.toList()[index].millisecondsSinceEpoch,
-                  yValueMapper: (t, index) => widget.data.values.toList()[index],
+                  yValueMapper: (index) => widget.data.values.toList()[index],
                 )
               : const Text("No data"),
           Row(

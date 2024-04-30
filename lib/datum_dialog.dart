@@ -15,7 +15,7 @@ class DatumDialog extends StatefulWidget {
 class DatumDialogState extends State<DatumDialog> {
   var newDate = DateTime.now();
   var newTime = TimeOfDay.now();
-  var newDatum;
+  var newDatum = null;
 
   @override
   Widget build(BuildContext context) {
@@ -62,12 +62,11 @@ class DatumDialogState extends State<DatumDialog> {
                 signed: true, decimal: true),
             inputFormatters: [
               // FilteringTextInputFormatter.allow(RegExp(r"[0-9.\-]")),
-              LengthLimitingTextInputFormatter(308),
+              LengthLimitingTextInputFormatter(307),
             ],
             onChanged: (value) => setState(() {
               var match = RegExp("[+-]?([0-9]*[.])?[0-9]+").firstMatch(value);
-              newDatum =
-                  match != null ? double.parse(match.group(0)!) : newDatum;
+              newDatum = match != null ? double.parse(match.group(0)!) : null;
             }),
           ),
           ElevatedButton(
@@ -83,7 +82,9 @@ class DatumDialogState extends State<DatumDialog> {
                       Navigator.of(context).pop();
                       appState.notify();
                     },
-              child: const Text("Okay"))
+              child: const Text("Okay")),
+          Text(newDatum == null ? "Invalid value" : "",
+              style: const TextStyle(color: Color.fromARGB(195, 255, 0, 0)))
         ],
       ),
     );
