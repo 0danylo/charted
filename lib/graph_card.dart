@@ -19,7 +19,8 @@ enum GraphType {
 }
 
 class GraphCard extends StatefulWidget {
-  const GraphCard({super.key, 
+  const GraphCard({
+    super.key,
     required this.name,
     required this.type,
     required this.data,
@@ -38,26 +39,30 @@ class GraphCardState extends State<GraphCard> {
 
   @override
   Widget build(BuildContext context) {
-    prepare();
-    var keys = widget.data.keys.toList();
+    var entries = widget.data.entries.toList();
+    entries.sort((a, b) => a.key.compareTo(b.key));
 
     final theme = Theme.of(context);
-    final style = theme.textTheme.displayMedium!.copyWith(
+    final titleStyle = theme.textTheme.displayMedium!.copyWith(
       color: theme.colorScheme.onPrimary,
     );
-    
+
     return Card(
       elevation: 10,
       color: theme.colorScheme.secondary,
       child: Column(
         children: [
-          const Padding(padding: EdgeInsets.all(20.0)),
-          Text(widget.name, style: style),
+          // const Padding(padding: EdgeInsets.all(10.0)),
+          Text(widget.name, style: titleStyle),
           widget.data.isNotEmpty
               ? SfSparkLineChart.custom(
-                  xValueMapper: (index) =>
-                      widget.data.keys.toList()[index].millisecondsSinceEpoch,
-                  yValueMapper: (index) => widget.data.values.toList()[index],
+                  dataCount: widget.data.length,
+                  xValueMapper: (index) => widget.data.entries
+                      .toList()[index]
+                      .key
+                      .millisecondsSinceEpoch,
+                  yValueMapper: (index) =>
+                      widget.data.entries.toList()[index].value,
                 )
               : const Text("No data"),
           Row(
@@ -66,11 +71,15 @@ class GraphCardState extends State<GraphCard> {
                 children: [
                   IconButton(
                       onPressed: () {
-                        makeDatumDialog(context, widget.name);
+                        makeDatumDialog();
                       },
                       icon: const Icon(Icons.add)),
-                  IconButton(
-                      onPressed: () {}, icon: const Icon(Icons.data_array))
+                  if (entries.isNotEmpty)
+                    IconButton(
+                        onPressed: () {
+                          makeDetailsDialog();
+                        },
+                        icon: const Icon(Icons.data_array))
                 ],
               )
             ],
@@ -80,26 +89,31 @@ class GraphCardState extends State<GraphCard> {
     );
   }
 
-  prepare() {
-    if (widget.data.isEmpty) return;
-
-    widget.data.entries.toList().sort((a, b) => a.key.compareTo(b.key));
-
-    min = max = widget.data.values.toList()[0];
-    for (var value in widget.data.values) {
-      if (value < min) {
-        min = value;
-      }
-      if (value > max) {
-        max = value;
-      }
-    }
-  }
-
-  makeDatumDialog(context, graphName) => showDialog(
+  makeDatumDialog() => showDialog(
       barrierDismissible: true,
       context: context,
       builder: (BuildContext context) {
-        return DatumDialog(graphName: graphName);
+        return DatumDialog(graphName: widget.name);
+      });
+
+  makeDetailsDialog() => showDialog(
+      barrierDismissible: true,
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          content: DataTable(
+            columns: const [
+              DataColumn(label: Text("Time")),
+              DataColumn(label: Text("Value"))
+            ],
+            rows: [
+              for (var entry in widget.data.entries)
+                DataRow(cells: [
+                  DataCell(Text(entry.key.toString())),
+                  DataCell(Text(entry.value.toString()))
+                ])
+            ],
+          ),
+        );
       });
 }
