@@ -101,16 +101,22 @@ class GraphCardState extends State<GraphCard> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          content: DataTable(
-            columns: const [
-              DataColumn(label: Text("Time")),
-              DataColumn(label: Text("Value"))
-            ],
-            rows: [
+          content: Table(
+            children: [
               for (var entry in widget.data.entries)
-                DataRow(cells: [
-                  DataCell(Text(entry.key.toString())),
-                  DataCell(Text(entry.value.toString()))
+                TableRow(children: [
+                  Text(entry.key.toString()),
+                  Text(entry.value.toString()),
+                  TextButton(
+                    onPressed: () {
+                      setState(() => widget.data.remove(entry.key));
+                      Navigator.of(context).pop();
+                      if (widget.data.isNotEmpty) {
+                        makeDetailsDialog();
+                      }
+                    },
+                    child: const Icon(Icons.remove_circle_outline, color: Color.fromARGB(255, 255, 0, 0)),
+                  )
                 ])
             ],
           ),
