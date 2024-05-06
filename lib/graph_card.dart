@@ -35,16 +35,17 @@ class GraphCard extends StatefulWidget {
 }
 
 class GraphCardState extends State<GraphCard> {
-  double min = 0.0, max = 0.0;
-
   @override
   Widget build(BuildContext context) {
     var entries = widget.data.entries.toList();
     entries.sort((a, b) => a.key.compareTo(b.key));
 
     final theme = Theme.of(context);
-    final titleStyle = theme.textTheme.displayMedium!.copyWith(
-      color: theme.colorScheme.onPrimary,
+    final lightColor = Color.fromARGB(255, 223, 223, 223);
+    final darkColor = Color.fromARGB(255, 31, 31, 31);
+
+    final whiteStyle = theme.textTheme.displaySmall!.copyWith(
+      color: lightColor,
     );
 
     return Card(
@@ -52,36 +53,48 @@ class GraphCardState extends State<GraphCard> {
       color: theme.colorScheme.secondary,
       child: Column(
         children: [
-          // const Padding(padding: EdgeInsets.all(10.0)),
-          Text(widget.name, style: titleStyle),
-          widget.data.isNotEmpty
-              ? SfSparkLineChart.custom(
-                  dataCount: widget.data.length,
-                  xValueMapper: (index) => widget.data.entries
-                      .toList()[index]
-                      .key
-                      .millisecondsSinceEpoch,
-                  yValueMapper: (index) =>
-                      widget.data.entries.toList()[index].value,
+          const Padding(padding: EdgeInsets.all(5.0)),
+          Text(widget.name, style: whiteStyle),
+          entries.isNotEmpty
+              ? Container(
+                  padding: const EdgeInsets.all(25.0),
+                  child: SfSparkLineChart.custom(
+                    dataCount: entries.length,
+                    xValueMapper: (index) => widget.data.entries
+                        .toList()[index]
+                        .key
+                        .millisecondsSinceEpoch,
+                    yValueMapper: (index) =>
+                        widget.data.entries.toList()[index].value,
+                    plotBand: SparkChartPlotBand(
+                        borderColor: darkColor, color: lightColor),
+                    marker: const SparkChartMarker(
+                      displayMode: SparkChartMarkerDisplayMode.all,
+                      size: 10.0,
+                      color: null,
+                    ),
+                    axisLineColor:
+                        widget.data.values.any((value) => value < 0) &&
+                                widget.data.values.any((value) => value > 0)
+                            ? null
+                            : Colors.transparent,
+                  ),
                 )
               : const Text("No data"),
-          Row(
+          ButtonBar(
             children: [
-              ButtonBar(
-                children: [
-                  IconButton(
-                      onPressed: () {
-                        makeDatumDialog();
-                      },
-                      icon: const Icon(Icons.add)),
-                  if (entries.isNotEmpty)
-                    IconButton(
-                        onPressed: () {
-                          makeDetailsDialog();
-                        },
-                        icon: const Icon(Icons.data_array))
-                ],
-              )
+              IconButton(
+                  onPressed: () {
+                    makeDatumDialog();
+                  },
+                  icon: const Icon(Icons.add)),
+              if (entries.isNotEmpty)
+                IconButton(
+                    onPressed: () {
+                      makeDetailsDialog();
+                    },
+                    icon: const Icon(Icons.data_array)),
+              IconButton(onPressed: () {}, icon: const Icon(Icons.auto_graph))
             ],
           )
         ],
@@ -115,7 +128,8 @@ class GraphCardState extends State<GraphCard> {
                         makeDetailsDialog();
                       }
                     },
-                    child: const Icon(Icons.remove_circle_outline, color: Color.fromARGB(255, 255, 0, 0)),
+                    child: const Icon(Icons.remove_circle_outline,
+                        color: Color.fromARGB(255, 255, 0, 0)),
                   )
                 ])
             ],
