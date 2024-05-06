@@ -23,7 +23,7 @@ class GraphDialogState extends State<GraphDialog> {
 
     return AlertDialog(
         content: Column(
-          mainAxisSize: MainAxisSize.min,
+      mainAxisSize: MainAxisSize.min,
       children: [
         Title(
             color: const Color.fromARGB(255, 106, 106, 106),
@@ -31,6 +31,7 @@ class GraphDialogState extends State<GraphDialog> {
         TextFormField(
             decoration: const InputDecoration(labelText: "Name:"),
             onChanged: (value) => setState(() => newGraphName = value)),
+            
         ElevatedButton(
             onPressed: newGraphName == "" ||
                     appState.names.contains(newGraphName)
@@ -45,13 +46,16 @@ class GraphDialogState extends State<GraphDialog> {
                     appState.notify();
                   },
             child: const Text("Create Graph")),
-        Text(
-            newGraphName == ""
-                ? "Invalid name"
-                : appState.names.contains(newGraphName)
-                    ? "Name already used"
-                    : "",
-            style: const TextStyle(color: Color.fromARGB(195, 255, 0, 0)))
+        if (newGraphName == "")
+          const Text(
+            "Invalid name",
+            style: TextStyle(color: Color.fromARGB(195, 255, 0, 0)),
+          )
+        else if (appState.names.contains(newGraphName))
+          const Text(
+            "Name already used",
+            style: TextStyle(color: Color.fromARGB(195, 255, 0, 0)),
+          )
       ],
     ));
   }

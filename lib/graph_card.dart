@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:syncfusion_flutter_charts/sparkcharts.dart';
 import 'package:trend_notes/datum_dialog.dart';
+import 'package:trend_notes/utils.dart';
 
 enum GraphType {
   line,
@@ -37,20 +38,19 @@ class GraphCard extends StatefulWidget {
 class GraphCardState extends State<GraphCard> {
   @override
   Widget build(BuildContext context) {
-    var entries = widget.data.entries.toList();
-    entries.sort((a, b) => a.key.compareTo(b.key));
+    var entries = getSortedEntries();
 
     final theme = Theme.of(context);
-    final lightColor = Color.fromARGB(255, 223, 223, 223);
-    final darkColor = Color.fromARGB(255, 31, 31, 31);
+    const lightColor = Color.fromARGB(255, 223, 223, 223);
+    const darkColor = Color.fromARGB(255, 63, 63, 63);
 
     final whiteStyle = theme.textTheme.displaySmall!.copyWith(
-      color: lightColor,
+      color: Colors.white,
     );
 
     return Card(
       elevation: 10,
-      color: theme.colorScheme.secondary,
+      color: theme.colorScheme.primary,
       child: Column(
         children: [
           const Padding(padding: EdgeInsets.all(5.0)),
@@ -66,17 +66,19 @@ class GraphCardState extends State<GraphCard> {
                         .millisecondsSinceEpoch,
                     yValueMapper: (index) =>
                         widget.data.entries.toList()[index].value,
-                    plotBand: SparkChartPlotBand(
-                        borderColor: darkColor, color: lightColor),
+                    color: theme.colorScheme.secondary,
+                    // plotBand: const SparkChartPlotBand(
+                    //     borderColor: darkColor, color: lightColor),
                     marker: const SparkChartMarker(
-                      displayMode: SparkChartMarkerDisplayMode.all,
-                      size: 10.0,
-                      color: null,
-                    ),
+                        displayMode: SparkChartMarkerDisplayMode.all,
+                        size: 8.0,
+                        color: Colors.white,
+                        borderWidth: 1,
+                        borderColor: darkColor),
                     axisLineColor:
                         widget.data.values.any((value) => value < 0) &&
                                 widget.data.values.any((value) => value > 0)
-                            ? null
+                            ? darkColor
                             : Colors.transparent,
                   ),
                 )
@@ -87,14 +89,16 @@ class GraphCardState extends State<GraphCard> {
                   onPressed: () {
                     makeDatumDialog();
                   },
-                  icon: const Icon(Icons.add)),
+                  icon: const Icon(Icons.add, color: darkColor)),
               if (entries.isNotEmpty)
                 IconButton(
                     onPressed: () {
                       makeDetailsDialog();
                     },
-                    icon: const Icon(Icons.data_array)),
-              IconButton(onPressed: () {}, icon: const Icon(Icons.auto_graph))
+                    icon: const Icon(Icons.data_array, color: darkColor)),
+              IconButton(
+                  onPressed: () {},
+                  icon: const Icon(Icons.bar_chart, color: darkColor))
             ],
           )
         ],
@@ -113,12 +117,14 @@ class GraphCardState extends State<GraphCard> {
       barrierDismissible: true,
       context: context,
       builder: (BuildContext context) {
+        var entries = getSortedEntries();
+
         return AlertDialog(
           content: Table(
             children: [
-              for (var entry in widget.data.entries)
+              for (var entry in entries)
                 TableRow(children: [
-                  Text(entry.key.toString()),
+                  Text(formatDate(entry.key) + ' ' + formatTime(TimeOfDay(hour: entry.key.hour, minute: entry.key.minute))),
                   Text(entry.value.toString()),
                   TextButton(
                     onPressed: () {
@@ -129,11 +135,17 @@ class GraphCardState extends State<GraphCard> {
                       }
                     },
                     child: const Icon(Icons.remove_circle_outline,
-                        color: Color.fromARGB(255, 255, 0, 0)),
+                        color: Colors.red),
                   )
                 ])
             ],
           ),
         );
       });
+
+  getSortedEntries() {
+    var entries = widget.data.entries.toList();
+    entries.sort((a, b) => a.key.compareTo(b.key));
+    return entries;
+  }
 }

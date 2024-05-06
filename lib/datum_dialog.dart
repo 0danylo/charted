@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:trend_notes/main.dart';
+import 'package:trend_notes/utils.dart';
 
 class DatumDialog extends StatefulWidget {
   const DatumDialog({super.key, required this.graphName});
@@ -41,7 +42,7 @@ class DatumDialogState extends State<DatumDialog> {
                         (value) => setState(() => newDate = value ?? newDate));
                   },
                   child: const Text("Set date")),
-              Text(newDate.toString()),
+              Text(formatDate(newDate)),
             ],
           ),
           Row(
@@ -54,7 +55,7 @@ class DatumDialogState extends State<DatumDialog> {
                             setState(() => newTime = value ?? newTime));
                   },
                   child: const Text("Set time")),
-              Text(newTime.toString()),
+              Text(formatTime(newTime)),
             ],
           ),
           TextFormField(
@@ -62,7 +63,7 @@ class DatumDialogState extends State<DatumDialog> {
             keyboardType: const TextInputType.numberWithOptions(
                 signed: true, decimal: true),
             inputFormatters: [
-              // FilteringTextInputFormatter.allow(RegExp(r"[0-9.\-]")),
+              FilteringTextInputFormatter.deny(RegExp(r",")),
               LengthLimitingTextInputFormatter(307),
             ],
             onChanged: (value) => setState(() {
@@ -84,8 +85,9 @@ class DatumDialogState extends State<DatumDialog> {
                       appState.notify();
                     },
               child: const Text("Okay")),
-          Text(newDatum == null ? "Invalid value" : "",
-              style: const TextStyle(color: Color.fromARGB(195, 255, 0, 0)))
+          if (newDatum == null)
+            const Text("Invalid value",
+                style: TextStyle(color: Color.fromARGB(195, 255, 0, 0)))
         ],
       ),
     );
