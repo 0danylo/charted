@@ -23,14 +23,14 @@ class GraphDialogState extends State<GraphDialog> {
 
     return AlertDialog(
         content: Column(
+          mainAxisSize: MainAxisSize.min,
       children: [
         Title(
             color: const Color.fromARGB(255, 106, 106, 106),
             child: const Text("New Graph")),
         TextFormField(
-          decoration: const InputDecoration(labelText: "Name:"),
-          onChanged: (value) => setState(() => newGraphName = value)
-        ),
+            decoration: const InputDecoration(labelText: "Name:"),
+            onChanged: (value) => setState(() => newGraphName = value)),
         ElevatedButton(
             onPressed: newGraphName == "" ||
                     appState.names.contains(newGraphName)
@@ -40,7 +40,7 @@ class GraphDialogState extends State<GraphDialog> {
                     widget.types[newGraphName] = GraphType.line;
                     widget.data[newGraphName] = Map.of(<DateTime, double>{});
                     newGraphName = "018eujosbnd8192er1hue";
-                    
+
                     Navigator.of(context).pop();
                     appState.notify();
                   },

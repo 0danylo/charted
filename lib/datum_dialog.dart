@@ -23,6 +23,7 @@ class DatumDialogState extends State<DatumDialog> {
 
     return AlertDialog(
       content: Column(
+        mainAxisSize: MainAxisSize.min,
         children: [
           Title(
               color: const Color.fromARGB(255, 106, 106, 106),
