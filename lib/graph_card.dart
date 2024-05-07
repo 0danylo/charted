@@ -41,69 +41,70 @@ class GraphCardState extends State<GraphCard> {
     var entries = getSortedEntries();
 
     final theme = Theme.of(context);
-    const lightColor = Color.fromARGB(255, 223, 223, 223);
-    const darkColor = Color.fromARGB(255, 63, 63, 63);
 
     final whiteStyle = theme.textTheme.displaySmall!.copyWith(
       color: Colors.white,
     );
 
-    return Card(
-      elevation: 10,
-      color: theme.colorScheme.primary,
-      child: Column(
-        children: [
-          const Padding(padding: EdgeInsets.all(5.0)),
-          Text(widget.name, style: whiteStyle),
-          entries.isNotEmpty
-              ? Container(
-                  padding: const EdgeInsets.all(25.0),
-                  child: SfSparkLineChart.custom(
-                    dataCount: entries.length,
-                    xValueMapper: (index) => widget.data.entries
-                        .toList()[index]
-                        .key
-                        .millisecondsSinceEpoch,
-                    yValueMapper: (index) =>
-                        widget.data.entries.toList()[index].value,
-                    color: theme.colorScheme.secondary,
-                    // plotBand: const SparkChartPlotBand(
-                    //     borderColor: darkColor, color: lightColor),
-                    marker: const SparkChartMarker(
-                        displayMode: SparkChartMarkerDisplayMode.all,
-                        size: 8.0,
-                        color: Colors.white,
-                        borderWidth: 1,
-                        borderColor: darkColor),
-                    axisLineColor:
-                        widget.data.values.any((value) => value < 0) &&
-                                widget.data.values.any((value) => value > 0)
-                            ? darkColor
-                            : Colors.transparent,
-                  ),
-                )
-              : const Text("No data"),
-          ButtonBar(
-            children: [
-              IconButton(
-                  onPressed: () {
-                    makeDatumDialog();
-                  },
-                  icon: const Icon(Icons.add, color: darkColor)),
-              if (entries.isNotEmpty)
+    final card = Container(
+      padding: const EdgeInsets.fromLTRB(10, 10, 10, 0),
+      child: Card(
+        elevation: 10,
+        color: theme.colorScheme.primary,
+        child: Column(
+          children: [
+            const Padding(padding: EdgeInsets.all(5.0)),
+            Text(widget.name, style: whiteStyle),
+            entries.isNotEmpty
+                ? Container(
+                    padding: const EdgeInsets.all(25.0),
+                    child: SfSparkLineChart.custom(
+                      dataCount: entries.length,
+                      xValueMapper: (index) => widget.data.entries
+                          .toList()[index]
+                          .key
+                          .millisecondsSinceEpoch,
+                      yValueMapper: (index) =>
+                          widget.data.entries.toList()[index].value,
+                      color: lightColor,
+                      marker: const SparkChartMarker(
+                          displayMode: SparkChartMarkerDisplayMode.all,
+                          size: 8.0,
+                          color: white,
+                          borderWidth: 1,
+                          borderColor: lightColor),
+                      axisLineColor:
+                          widget.data.values.any((value) => value < 0) &&
+                                  widget.data.values.any((value) => value > 0)
+                              ? darkColor
+                              : Colors.transparent,
+                    ),
+                  )
+                : const Text("No data"),
+            ButtonBar(
+              children: [
                 IconButton(
                     onPressed: () {
-                      makeDetailsDialog();
+                      makeDatumDialog();
                     },
-                    icon: const Icon(Icons.data_array, color: darkColor)),
-              IconButton(
-                  onPressed: () {},
-                  icon: const Icon(Icons.bar_chart, color: darkColor))
-            ],
-          )
-        ],
+                    icon: const Icon(Icons.add, color: darkColor)),
+                if (entries.isNotEmpty)
+                  IconButton(
+                      onPressed: () {
+                        makeDetailsDialog();
+                      },
+                      icon: const Icon(Icons.data_array, color: darkColor)),
+                IconButton(
+                    onPressed: () {},
+                    icon: const Icon(Icons.bar_chart, color: darkColor))
+              ],
+            )
+          ],
+        ),
       ),
     );
+
+    return card;
   }
 
   makeDatumDialog() => showDialog(
@@ -124,7 +125,10 @@ class GraphCardState extends State<GraphCard> {
             children: [
               for (var entry in entries)
                 TableRow(children: [
-                  Text(formatDate(entry.key) + ' ' + formatTime(TimeOfDay(hour: entry.key.hour, minute: entry.key.minute))),
+                  Text(formatDate(entry.key) +
+                      ' ' +
+                      formatTime(TimeOfDay(
+                          hour: entry.key.hour, minute: entry.key.minute))),
                   Text(entry.value.toString()),
                   TextButton(
                     onPressed: () {

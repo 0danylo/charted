@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:trend_notes/graph_card.dart';
 import 'package:trend_notes/graph_dialog.dart';
+import 'package:trend_notes/utils.dart';
 
 void main() {
   runApp(const App());
@@ -19,7 +20,7 @@ class App extends StatelessWidget {
         theme: ThemeData(
           useMaterial3: true,
           colorScheme:
-              ColorScheme.fromSeed(seedColor: const Color.fromRGBO(0, 0, 0, 1)),
+              ColorScheme.fromSeed(seedColor: const Color.fromARGB(255, 0, 100, 255)),
         ),
         home: const MainPage(),
       ),
@@ -50,6 +51,7 @@ class MainPageState extends State<MainPage> {
     var appState = context.watch<AppState>();
 
     return Scaffold(
+      backgroundColor: darkColor,
       body: ListView(children: [
         for (var name in appState.names)
           GraphCard(
