@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:trend_notes/main.dart';
-import 'package:trend_notes/utils.dart';
+import 'package:trend_notes/util.dart';
 
 class DatumDialog extends StatefulWidget {
   const DatumDialog({super.key, required this.graphName});
@@ -23,17 +23,20 @@ class DatumDialogState extends State<DatumDialog> {
     var appState = context.watch<AppState>();
 
     return AlertDialog(
+      backgroundColor: darkColor,
       content: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
           Title(
               color: const Color.fromARGB(255, 106, 106, 106),
-              child: Text("${widget.graphName} - New data point")),
+              child: subtitleOf("Add datum to ${widget.graphName}")),
+          getPadding(5),
           Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               ElevatedButton(
                   onPressed: () {
-                    var date = showDatePicker(
+                    showDatePicker(
                       context: context,
                       firstDate: DateTime.fromMillisecondsSinceEpoch(0),
                       lastDate:
@@ -41,25 +44,30 @@ class DatumDialogState extends State<DatumDialog> {
                     ).then(
                         (value) => setState(() => newDate = value ?? newDate));
                   },
+                  style: buttonStyle,
                   child: const Text("Set date")),
-              Text(formatDate(newDate)),
+              formatDate(newDate),
             ],
           ),
           Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               ElevatedButton(
                   onPressed: () {
-                    var time = showTimePicker(
+                    showTimePicker(
                             context: context, initialTime: TimeOfDay.now())
                         .then((value) =>
                             setState(() => newTime = value ?? newTime));
                   },
+                  style: buttonStyle,
                   child: const Text("Set time")),
-              Text(formatTime(newTime)),
+              formatTime(newTime),
             ],
           ),
           TextFormField(
-            decoration: const InputDecoration(labelText: "Value:"),
+            style: mediumStyle,
+            decoration: const InputDecoration(
+                labelText: "Value:", labelStyle: labelStyle),
             keyboardType: const TextInputType.numberWithOptions(
                 signed: true, decimal: true),
             inputFormatters: [
@@ -71,6 +79,7 @@ class DatumDialogState extends State<DatumDialog> {
               newDatum = match != null ? double.parse(match.group(0)!) : null;
             }),
           ),
+          errorOf(newDatum == null ? "Invalid value" : ""),
           ElevatedButton(
               onPressed: newDatum == null
                   ? null
@@ -84,10 +93,8 @@ class DatumDialogState extends State<DatumDialog> {
                       Navigator.of(context).pop();
                       appState.notify();
                     },
-              child: const Text("Okay")),
-          if (newDatum == null)
-            const Text("Invalid value",
-                style: TextStyle(color: Color.fromARGB(195, 255, 0, 0)))
+              style: buttonStyle,
+              child: const Text("Add"))
         ],
       ),
     );

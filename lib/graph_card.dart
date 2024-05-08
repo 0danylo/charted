@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:syncfusion_flutter_charts/sparkcharts.dart';
 import 'package:trend_notes/datum_dialog.dart';
-import 'package:trend_notes/utils.dart';
+import 'package:trend_notes/util.dart';
 
 enum GraphType {
   line,
@@ -38,13 +38,9 @@ class GraphCard extends StatefulWidget {
 class GraphCardState extends State<GraphCard> {
   @override
   Widget build(BuildContext context) {
-    var entries = getSortedEntries();
-
     final theme = Theme.of(context);
 
-    final whiteStyle = theme.textTheme.displaySmall!.copyWith(
-      color: Colors.white,
-    );
+    var entries = getSortedEntries();
 
     final card = Container(
       padding: const EdgeInsets.fromLTRB(10, 10, 10, 0),
@@ -53,8 +49,8 @@ class GraphCardState extends State<GraphCard> {
         color: theme.colorScheme.primary,
         child: Column(
           children: [
-            const Padding(padding: EdgeInsets.all(5.0)),
-            Text(widget.name, style: whiteStyle),
+            getPadding(5),
+            Text(widget.name, style: titleStyle),
             entries.isNotEmpty
                 ? Container(
                     padding: const EdgeInsets.all(25.0),
@@ -66,13 +62,13 @@ class GraphCardState extends State<GraphCard> {
                           .millisecondsSinceEpoch,
                       yValueMapper: (index) =>
                           widget.data.entries.toList()[index].value,
-                      color: lightColor,
+                      color: white,
                       marker: const SparkChartMarker(
                           displayMode: SparkChartMarkerDisplayMode.all,
                           size: 8.0,
-                          color: white,
+                          color: darkColor,
                           borderWidth: 1,
-                          borderColor: lightColor),
+                          borderColor: white),
                       axisLineColor:
                           widget.data.values.any((value) => value < 0) &&
                                   widget.data.values.any((value) => value > 0)
@@ -80,7 +76,7 @@ class GraphCardState extends State<GraphCard> {
                               : Colors.transparent,
                     ),
                   )
-                : const Text("No data"),
+                : errorOf("No data"),
             ButtonBar(
               children: [
                 IconButton(
@@ -94,9 +90,10 @@ class GraphCardState extends State<GraphCard> {
                         makeDetailsDialog();
                       },
                       icon: const Icon(Icons.data_array, color: darkColor)),
-                IconButton(
-                    onPressed: () {},
-                    icon: const Icon(Icons.bar_chart, color: darkColor))
+                if (entries.isNotEmpty)
+                  IconButton(
+                      onPressed: () {},
+                      icon: const Icon(Icons.bar_chart, color: darkColor))
               ],
             )
           ],
@@ -121,16 +118,21 @@ class GraphCardState extends State<GraphCard> {
         var entries = getSortedEntries();
 
         return AlertDialog(
-          content: Table(
+          backgroundColor: darkColor,
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
             children: [
               for (var entry in entries)
-                TableRow(children: [
-                  Text(formatDate(entry.key) +
-                      ' ' +
-                      formatTime(TimeOfDay(
-                          hour: entry.key.hour, minute: entry.key.minute))),
-                  Text(entry.value.toString()),
-                  TextButton(
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                  Column(children: [
+                    formatDate(entry.key),
+                    formatTime(TimeOfDay(
+                        hour: entry.key.hour, minute: entry.key.minute))
+                  ]),
+                  styled(formatDouble(entry.value)),
+                  IconButton(
                     onPressed: () {
                       setState(() => widget.data.remove(entry.key));
                       Navigator.of(context).pop();
@@ -138,7 +140,7 @@ class GraphCardState extends State<GraphCard> {
                         makeDetailsDialog();
                       }
                     },
-                    child: const Icon(Icons.remove_circle_outline,
+                    icon: const Icon(Icons.remove_circle_outline,
                         color: Colors.red),
                   )
                 ])

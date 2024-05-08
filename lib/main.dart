@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:trend_notes/graph_card.dart';
 import 'package:trend_notes/graph_dialog.dart';
-import 'package:trend_notes/utils.dart';
+import 'package:trend_notes/util.dart';
 
 void main() {
   runApp(const App());
@@ -19,8 +19,8 @@ class App extends StatelessWidget {
         title: 'Chartnote',
         theme: ThemeData(
           useMaterial3: true,
-          colorScheme:
-              ColorScheme.fromSeed(seedColor: const Color.fromARGB(255, 0, 100, 255)),
+          colorScheme: ColorScheme.fromSeed(
+              seedColor: const Color.fromARGB(255, 0, 100, 255)),
         ),
         home: const MainPage(),
       ),
@@ -59,13 +59,13 @@ class MainPageState extends State<MainPage> {
             type: appState.types[name]!,
             data: appState.data[name]!,
           ),
-        const SizedBox(height: 10),
+        getPadding(5),
         Center(
           child: ElevatedButton(
-            onPressed: () => makeGraphDialog(
-                context, appState.names, appState.types, appState.data),
-            child: const Text('+'),
-          ),
+              onPressed: () => makeGraphDialog(
+                  context, appState.names, appState.types, appState.data),
+              style: buttonStyle,
+              child: const Text('+', style: TextStyle(fontSize: 36))),
         ),
       ]),
     );
