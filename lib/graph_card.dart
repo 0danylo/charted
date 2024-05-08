@@ -1,20 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:syncfusion_flutter_charts/sparkcharts.dart';
 import 'package:trend_notes/datum_dialog.dart';
+import 'package:trend_notes/details_dialog.dart';
 import 'package:trend_notes/util.dart';
 
 enum GraphType {
   line,
-  step,
-  bar;
+  lineWithPoints,
+  points,
+  step;
 
-  getClass(type) {
+  getNext(type) {
     if (type == line) {
-      return;
-    } else if (type == step) {
-      return;
+      return lineWithPoints;
+    } else if (type == lineWithPoints) {
+      return points;
+    } else if (type == points) {
+      return step;
     } else {
-      return;
+      return line;
     }
   }
 }
@@ -40,7 +44,7 @@ class GraphCardState extends State<GraphCard> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
-    var entries = getSortedEntries();
+    var entries = getSortedEntries(widget.data);
 
     final card = Container(
       padding: const EdgeInsets.fromLTRB(10, 10, 10, 0),
@@ -50,10 +54,10 @@ class GraphCardState extends State<GraphCard> {
         child: Column(
           children: [
             getPadding(5),
-            Text(widget.name, style: titleStyle),
+            titleOf(widget.name),
             entries.isNotEmpty
                 ? Container(
-                    padding: const EdgeInsets.all(25.0),
+                    padding: const EdgeInsets.fromLTRB(25, 0, 25, 0),
                     child: SfSparkLineChart.custom(
                       dataCount: entries.length,
                       xValueMapper: (index) => widget.data.entries
@@ -83,17 +87,17 @@ class GraphCardState extends State<GraphCard> {
                     onPressed: () {
                       makeDatumDialog();
                     },
-                    icon: const Icon(Icons.add, color: darkColor)),
+                    icon: const Icon(Icons.add, color: white)),
                 if (entries.isNotEmpty)
                   IconButton(
                       onPressed: () {
                         makeDetailsDialog();
                       },
-                      icon: const Icon(Icons.data_array, color: darkColor)),
+                      icon: const Icon(Icons.data_array, color: white)),
                 if (entries.isNotEmpty)
                   IconButton(
                       onPressed: () {},
-                      icon: const Icon(Icons.bar_chart, color: darkColor))
+                      icon: const Icon(Icons.auto_graph, color: white))
               ],
             )
           ],
@@ -115,43 +119,6 @@ class GraphCardState extends State<GraphCard> {
       barrierDismissible: true,
       context: context,
       builder: (BuildContext context) {
-        var entries = getSortedEntries();
-
-        return AlertDialog(
-          backgroundColor: darkColor,
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              for (var entry in entries)
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                  Column(children: [
-                    formatDate(entry.key),
-                    formatTime(TimeOfDay(
-                        hour: entry.key.hour, minute: entry.key.minute))
-                  ]),
-                  styled(formatDouble(entry.value)),
-                  IconButton(
-                    onPressed: () {
-                      setState(() => widget.data.remove(entry.key));
-                      Navigator.of(context).pop();
-                      if (widget.data.isNotEmpty) {
-                        makeDetailsDialog();
-                      }
-                    },
-                    icon: const Icon(Icons.remove_circle_outline,
-                        color: Colors.red),
-                  )
-                ])
-            ],
-          ),
-        );
+        return DetailsDialog(parent: widget, data: widget.data);
       });
-
-  getSortedEntries() {
-    var entries = widget.data.entries.toList();
-    entries.sort((a, b) => a.key.compareTo(b.key));
-    return entries;
-  }
 }

@@ -5,7 +5,7 @@ const lightColor = Color.fromARGB(255, 195, 195, 195);
 const white = Colors.white;
 
 const smallStyle = TextStyle(color: white, fontSize: 15);
-const mediumStyle = TextStyle(color: white, fontSize: 20);
+const mediumStyle = TextStyle(color: white, fontSize: 18);
 const subtitleStyle = TextStyle(color: white, fontSize: 30);
 const titleStyle = TextStyle(color: white, fontSize: 40);
 const errorStyle = TextStyle(color: Colors.red);
@@ -30,6 +30,12 @@ const months = [
   'Dec'
 ];
 
+getSortedEntries(Map data) {
+  var entries = data.entries.toList();
+  entries.sort((a, b) => a.key.compareTo(b.key));
+  return entries;
+}
+
 formatDate(DateTime date) =>
     styled('${months[date.month - 1]} ${date.day} ${date.year}');
 
@@ -39,8 +45,10 @@ formatTime(TimeOfDay time) => styled(
 formatDouble(double x) => x.toInt() == x ? x.toInt().toString() : x.toString();
 
 styled(String text) => Text(text, style: mediumStyle);
-subtitleOf(String text) => Text(text, style: subtitleStyle);
-titleOf(String text) => Text(text, style: titleStyle);
+subtitleOf(String text) =>
+    Text(text, style: subtitleStyle, textAlign: TextAlign.center);
+titleOf(String text) =>
+    Text(text, style: titleStyle, textAlign: TextAlign.center);
 errorOf(String text) => Text(text, style: errorStyle);
 
 getPadding(double side) => Padding(padding: EdgeInsets.all(side));

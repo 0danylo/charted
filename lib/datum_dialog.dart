@@ -27,10 +27,8 @@ class DatumDialogState extends State<DatumDialog> {
       content: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Title(
-              color: const Color.fromARGB(255, 106, 106, 106),
-              child: subtitleOf("Add datum to ${widget.graphName}")),
-          getPadding(5),
+          subtitleOf("Add datum to ${widget.graphName}"),
+          // getPadding(5),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
