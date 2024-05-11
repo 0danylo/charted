@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:syncfusion_flutter_charts/sparkcharts.dart';
 import 'package:trend_notes/datum_dialog.dart';
 import 'package:trend_notes/details_dialog.dart';
+import 'package:trend_notes/main.dart';
 import 'package:trend_notes/util.dart';
 
 enum GraphType {
@@ -42,6 +44,7 @@ class GraphCard extends StatefulWidget {
 class GraphCardState extends State<GraphCard> {
   @override
   Widget build(BuildContext context) {
+    var appState = context.watch<AppState>();
     final theme = Theme.of(context);
 
     var entries = getSortedEntries(widget.data);
@@ -80,7 +83,7 @@ class GraphCardState extends State<GraphCard> {
                               : Colors.transparent,
                     ),
                   )
-                : errorOf("No data"),
+                : errorOf('No data'),
             ButtonBar(
               children: [
                 IconButton(
@@ -96,7 +99,9 @@ class GraphCardState extends State<GraphCard> {
                       icon: const Icon(Icons.data_array, color: white)),
                 if (entries.isNotEmpty)
                   IconButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        appState.types[widget.name] = GraphType.line.getNext(appState.types[widget.name]);
+                      },
                       icon: const Icon(Icons.auto_graph, color: white))
               ],
             )
@@ -112,7 +117,7 @@ class GraphCardState extends State<GraphCard> {
       barrierDismissible: true,
       context: context,
       builder: (BuildContext context) {
-        return DatumDialog(graphName: widget.name);
+        return DatumDialog(name: widget.name);
       });
 
   makeDetailsDialog() => showDialog(

@@ -5,9 +5,9 @@ import 'package:trend_notes/main.dart';
 import 'package:trend_notes/util.dart';
 
 class DatumDialog extends StatefulWidget {
-  const DatumDialog({super.key, required this.graphName});
+  const DatumDialog({super.key, required this.name});
 
-  final String graphName;
+  final String name;
 
   @override
   State<StatefulWidget> createState() => DatumDialogState();
@@ -27,7 +27,7 @@ class DatumDialogState extends State<DatumDialog> {
       content: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          subtitleOf("Add datum to ${widget.graphName}"),
+          subtitleOf('Add datum to ${widget.name}'),
           // getPadding(5),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -43,7 +43,7 @@ class DatumDialogState extends State<DatumDialog> {
                         (value) => setState(() => newDate = value ?? newDate));
                   },
                   style: buttonStyle,
-                  child: const Text("Set date")),
+                  child: const Text('Set date')),
               formatDate(newDate),
             ],
           ),
@@ -58,31 +58,31 @@ class DatumDialogState extends State<DatumDialog> {
                             setState(() => newTime = value ?? newTime));
                   },
                   style: buttonStyle,
-                  child: const Text("Set time")),
+                  child: const Text('Set time')),
               formatTime(newTime),
             ],
           ),
           TextFormField(
             style: mediumStyle,
             decoration: const InputDecoration(
-                labelText: "Value:", labelStyle: labelStyle),
+                labelText: 'Value:', labelStyle: labelStyle),
             keyboardType: const TextInputType.numberWithOptions(
                 signed: true, decimal: true),
             inputFormatters: [
-              FilteringTextInputFormatter.deny(RegExp(r",")),
+              FilteringTextInputFormatter.deny(RegExp(r',')),
               LengthLimitingTextInputFormatter(307),
             ],
             onChanged: (value) => setState(() {
-              var match = RegExp("[+-]?([0-9]*[.])?[0-9]+").firstMatch(value);
+              var match = RegExp('[+-]?([0-9]*[.])?[0-9]+').firstMatch(value);
               newDatum = match != null ? double.parse(match.group(0)!) : null;
             }),
           ),
-          errorOf(newDatum == null ? "Invalid value" : ""),
+          errorOf(newDatum == null ? 'Invalid value' : ''),
           ElevatedButton(
               onPressed: newDatum == null
                   ? null
                   : () {
-                      appState.data.update(widget.graphName, (value) {
+                      appState.data.update(widget.name, (value) {
                         value[DateTime(newDate.year, newDate.month, newDate.day,
                             newTime.hour, newTime.minute)] = newDatum;
                         return value;
@@ -92,7 +92,7 @@ class DatumDialogState extends State<DatumDialog> {
                       appState.notify();
                     },
               style: buttonStyle,
-              child: const Text("Add"))
+              child: const Text('Add'))
         ],
       ),
     );
