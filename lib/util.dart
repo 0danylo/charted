@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 const darkColor = Color.fromARGB(255, 31, 31, 31);
 const lightColor = Color.fromARGB(255, 195, 195, 195);
 const white = Colors.white;
+const invisible = Colors.transparent;
 
 const smallStyle = TextStyle(color: white, fontSize: 15);
 const mediumStyle = TextStyle(color: white, fontSize: 18);
@@ -34,6 +35,23 @@ getSortedEntries(Map data) {
   var entries = data.entries.toList();
   entries.sort((a, b) => a.key.compareTo(b.key));
   return entries;
+}
+
+getStepEntries(Map data) {
+  var original = getSortedEntries(data);
+  var newList = [original[0]];
+
+  for (var i = 1; i < original.length; i++) {
+    newList.addAll([
+      MapEntry(
+        original[i].key.add(const Duration(milliseconds: -1)),
+        original[i - 1].value,
+      ),
+      original[i]
+    ]);
+  }
+
+  return newList;
 }
 
 formatDate(DateTime date) =>

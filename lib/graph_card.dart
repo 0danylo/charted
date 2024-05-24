@@ -47,7 +47,7 @@ class GraphCardState extends State<GraphCard> {
     var appState = context.watch<AppState>();
     final theme = Theme.of(context);
 
-    var entries = getSortedEntries(widget.data);
+    var entries = getEntries();
 
     final card = Container(
       padding: const EdgeInsets.fromLTRB(10, 10, 10, 0),
@@ -63,24 +63,36 @@ class GraphCardState extends State<GraphCard> {
                     padding: const EdgeInsets.fromLTRB(25, 0, 25, 0),
                     child: SfSparkLineChart.custom(
                       dataCount: entries.length,
-                      xValueMapper: (index) => widget.data.entries
-                          .toList()[index]
-                          .key
-                          .millisecondsSinceEpoch,
-                      yValueMapper: (index) =>
-                          widget.data.entries.toList()[index].value,
-                      color: white,
-                      marker: const SparkChartMarker(
+                      xValueMapper: (index) =>
+                          getEntries()[index].key.millisecondsSinceEpoch,
+                      yValueMapper: (index) => getEntries()[index].value,
+                      color: [
+                        GraphType.line,
+                        GraphType.lineWithPoints,
+                        GraphType.step
+                      ].contains(widget.type)
+                          ? white
+                          : invisible,
+                      width: 2,
+                      marker: SparkChartMarker(
                           displayMode: SparkChartMarkerDisplayMode.all,
-                          size: 8.0,
-                          color: darkColor,
-                          borderWidth: 1,
-                          borderColor: white),
-                      axisLineColor:
-                          widget.data.values.any((value) => value < 0) &&
-                                  widget.data.values.any((value) => value > 0)
+                          size: 8,
+                          color: [GraphType.lineWithPoints, GraphType.points]
+                                  .contains(widget.type)
                               ? darkColor
-                              : Colors.transparent,
+                              : invisible,
+                          borderWidth: 1,
+                          borderColor: [
+                            GraphType.lineWithPoints,
+                            GraphType.points
+                          ].contains(widget.type)
+                              ? white
+                              : invisible),
+                      axisLineWidth:
+                          widget.data.values.any((value) => value <= 0) &&
+                                  widget.data.values.any((value) => value >= 0)
+                              ? 2
+                              : 0,
                     ),
                   )
                 : errorOf('No data'),
@@ -100,7 +112,9 @@ class GraphCardState extends State<GraphCard> {
                 if (entries.isNotEmpty)
                   IconButton(
                       onPressed: () {
-                        appState.types[widget.name] = GraphType.line.getNext(appState.types[widget.name]);
+                        appState.types[widget.name] =
+                            GraphType.line.getNext(appState.types[widget.name]);
+                        appState.notify();
                       },
                       icon: const Icon(Icons.auto_graph, color: white))
               ],
@@ -126,4 +140,10 @@ class GraphCardState extends State<GraphCard> {
       builder: (BuildContext context) {
         return DetailsDialog(parent: widget, data: widget.data);
       });
+
+  getEntries() {
+    var entriesFunction =
+        widget.type == GraphType.step ? getStepEntries : getSortedEntries;
+    return entriesFunction(widget.data);
+  }
 }

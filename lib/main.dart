@@ -61,12 +61,17 @@ class MainPageState extends State<MainPage> {
           ),
         getPadding(5),
         Center(
-          child: ElevatedButton(
-              onPressed: () => makeGraphDialog(
-                  context, appState.names, appState.types, appState.data),
-              style: buttonStyle,
-              child: const Text('+', style: TextStyle(fontSize: 36))),
-        ),
+          child: IconButton(
+            onPressed: () => makeGraphDialog(
+                context, appState.names, appState.types, appState.data),
+            style: buttonStyle.copyWith(
+              iconColor: MaterialStateProperty.resolveWith(
+                (states) => Theme.of(context).colorScheme.primary,
+              ),
+            ),
+            icon: const Icon(Icons.add, size: 30),
+          ),
+        )
       ]),
     );
   }
