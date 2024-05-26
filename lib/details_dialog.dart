@@ -28,7 +28,7 @@ class DetailsDialogState extends State<DetailsDialog> {
       content: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          subtitleOf(parent.name),
+          titleOf(parent.name),
           for (var entry in entries)
             Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
               Column(children: [
@@ -36,7 +36,7 @@ class DetailsDialogState extends State<DetailsDialog> {
                 formatTime(
                     TimeOfDay(hour: entry.key.hour, minute: entry.key.minute))
               ]),
-              styled(formatDouble(entry.value)),
+              largeStyled(formatDouble(entry.value)),
               IconButton(
                 onPressed: () {
                   setState(() => widget.data.remove(entry.key));

@@ -93,6 +93,14 @@ class GraphCardState extends State<GraphCard> {
                                   widget.data.values.any((value) => value >= 0)
                               ? 2
                               : 0,
+                      // trackball: widget.type != GraphType.step ? SparkChartTrackball(
+                      //   borderColor: invisible,
+                      //     tooltipFormatter: (details) =>
+                      //         formatDouble(details.y!.toDouble()).toString(),
+                      //         labelStyle: smallStyle,
+                      //         color: darkColor
+                      //         ) : null,
+
                     ),
                   )
                 : errorOf('No data'),
@@ -146,4 +154,6 @@ class GraphCardState extends State<GraphCard> {
         widget.type == GraphType.step ? getStepEntries : getSortedEntries;
     return entriesFunction(widget.data);
   }
+
+  getChartType() {}
 }

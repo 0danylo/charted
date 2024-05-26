@@ -7,6 +7,7 @@ const invisible = Colors.transparent;
 
 const smallStyle = TextStyle(color: white, fontSize: 15);
 const mediumStyle = TextStyle(color: white, fontSize: 18);
+const largeStyle = TextStyle(color: white, fontSize: 24);
 const subtitleStyle = TextStyle(color: white, fontSize: 30);
 const titleStyle = TextStyle(color: white, fontSize: 40);
 const errorStyle = TextStyle(color: Colors.red);
@@ -62,7 +63,9 @@ formatTime(TimeOfDay time) => styled(
 
 formatDouble(double x) => x.toInt() == x ? x.toInt().toString() : x.toString();
 
+smallStyled(String text) => Text(text, style: smallStyle);
 styled(String text) => Text(text, style: mediumStyle);
+largeStyled(String text) => Text(text, style: largeStyle);
 subtitleOf(String text) =>
     Text(text, style: subtitleStyle, textAlign: TextAlign.center);
 titleOf(String text) =>

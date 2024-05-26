@@ -28,7 +28,7 @@ class DatumDialogState extends State<DatumDialog> {
         mainAxisSize: MainAxisSize.min,
         children: [
           subtitleOf('Add datum to ${widget.name}'),
-          // getPadding(5),
+          getPadding(5),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
