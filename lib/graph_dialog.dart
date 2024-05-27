@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:trend_notes/function_util.dart';
 import 'package:trend_notes/graph_card.dart';
 import 'package:trend_notes/main.dart';
-import 'package:trend_notes/util.dart';
+import 'package:trend_notes/style_util.dart';
 
 class GraphDialog extends StatefulWidget {
   final List names;
@@ -32,7 +33,8 @@ class GraphDialogState extends State<GraphDialog> {
                 child: subtitleOf("New Graph")),
             TextFormField(
                 style: mediumStyle,
-                decoration: const InputDecoration(labelText: "Name:", labelStyle: labelStyle),
+                decoration: const InputDecoration(
+                    labelText: "Name:", labelStyle: labelStyle),
                 onChanged: (value) => setState(() => newGraphName = value)),
             Text(
               newGraphName == ""
@@ -47,11 +49,12 @@ class GraphDialogState extends State<GraphDialog> {
                     newGraphName == "" || appState.names.contains(newGraphName)
                         ? null
                         : () {
+                            writeGraph(newGraphName, GraphType.lineWithPoints);
                             widget.names.add(newGraphName);
                             widget.types[newGraphName] = GraphType.line;
                             widget.data[newGraphName] =
                                 Map.of(<DateTime, double>{});
-                            newGraphName = "018eujosbnd8192er1hue";
+                            newGraphName = placeholderGraphName;
 
                             Navigator.of(context).pop();
                             appState.notify();

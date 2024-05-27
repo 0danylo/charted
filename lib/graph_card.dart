@@ -4,7 +4,7 @@ import 'package:syncfusion_flutter_charts/sparkcharts.dart';
 import 'package:trend_notes/datum_dialog.dart';
 import 'package:trend_notes/details_dialog.dart';
 import 'package:trend_notes/main.dart';
-import 'package:trend_notes/util.dart';
+import 'package:trend_notes/style_util.dart';
 
 enum GraphType {
   line,
@@ -120,6 +120,8 @@ class GraphCardState extends State<GraphCard> {
                 if (entries.isNotEmpty)
                   IconButton(
                       onPressed: () {
+                        
+
                         appState.types[widget.name] =
                             GraphType.line.getNext(appState.types[widget.name]);
                         appState.notify();

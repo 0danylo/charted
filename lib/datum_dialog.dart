@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
+import 'package:trend_notes/function_util.dart';
 import 'package:trend_notes/main.dart';
-import 'package:trend_notes/util.dart';
+import 'package:trend_notes/style_util.dart';
 
 class DatumDialog extends StatefulWidget {
   const DatumDialog({super.key, required this.name});
@@ -38,7 +39,13 @@ class DatumDialogState extends State<DatumDialog> {
                       context: context,
                       firstDate: DateTime.fromMillisecondsSinceEpoch(0),
                       lastDate:
-                          DateTime.now().add(const Duration(days: 365240)),
+                          DateTime.now().add(const Duration(days: 365241)),
+                      builder: (context, child) => Theme(
+                          data: ThemeData.dark().copyWith(
+                              colorScheme: const ColorScheme.dark(
+                                  primary: Color.fromARGB(255, 0, 100, 255),
+                                  secondary: lightColor)),
+                          child: child!),
                     ).then(
                         (value) => setState(() => newDate = value ?? newDate));
                   },
@@ -53,9 +60,22 @@ class DatumDialogState extends State<DatumDialog> {
               ElevatedButton(
                   onPressed: () {
                     showTimePicker(
-                            context: context, initialTime: TimeOfDay.now())
-                        .then((value) =>
-                            setState(() => newTime = value ?? newTime));
+                      context: context,
+                      initialTime: TimeOfDay.now(),
+                      builder: (BuildContext context, Widget? child) {
+                        return Theme(
+                            data: ThemeData.dark().copyWith(
+                                colorScheme: const ColorScheme.dark(
+                                    primary: Color.fromARGB(255, 0, 100, 255),
+                                    secondary: lightColor)),
+                            child: MediaQuery(
+                              data: MediaQuery.of(context)
+                                  .copyWith(alwaysUse24HourFormat: false),
+                              child: child!,
+                            ));
+                      },
+                    ).then(
+                        (value) => setState(() => newTime = value ?? newTime));
                   },
                   style: buttonStyle,
                   child: const Text('Set time')),
@@ -88,6 +108,7 @@ class DatumDialogState extends State<DatumDialog> {
                         return value;
                       }, ifAbsent: () => {newDate: newDatum});
 
+                      writeDatum(widget.name, newDate, newDatum);
                       Navigator.of(context).pop();
                       appState.notify();
                     },

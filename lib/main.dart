@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:trend_notes/graph_card.dart';
 import 'package:trend_notes/graph_dialog.dart';
-import 'package:trend_notes/util.dart';
+import 'package:trend_notes/style_util.dart';
 
 void main() {
   runApp(const App());

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:trend_notes/graph_card.dart';
 import 'package:trend_notes/main.dart';
-import 'package:trend_notes/util.dart';
+import 'package:trend_notes/style_util.dart';
 
 class DetailsDialog extends StatefulWidget {
   const DetailsDialog({super.key, required this.parent, required this.data});
