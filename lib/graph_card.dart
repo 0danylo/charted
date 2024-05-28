@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:syncfusion_flutter_charts/sparkcharts.dart';
 import 'package:trend_notes/datum_dialog.dart';
 import 'package:trend_notes/details_dialog.dart';
+import 'package:trend_notes/file_util.dart';
 import 'package:trend_notes/main.dart';
 import 'package:trend_notes/style_util.dart';
 
@@ -12,7 +13,7 @@ enum GraphType {
   points,
   step;
 
-  getNext(type) {
+  static getNext(type) {
     if (type == line) {
       return lineWithPoints;
     } else if (type == lineWithPoints) {
@@ -26,6 +27,10 @@ enum GraphType {
 }
 
 class GraphCard extends StatefulWidget {
+  final String name;
+  final GraphType type;
+  final Map<DateTime, double> data;
+
   const GraphCard({
     super.key,
     required this.name,
@@ -33,15 +38,14 @@ class GraphCard extends StatefulWidget {
     required this.data,
   });
 
-  final String name;
-  final GraphType type;
-  final Map<DateTime, double> data;
-
   @override
   State<GraphCard> createState() => GraphCardState();
 }
 
 class GraphCardState extends State<GraphCard> {
+  int tapCount = 0;
+  DateTime? lastTapTime;
+
   @override
   Widget build(BuildContext context) {
     var appState = context.watch<AppState>();
@@ -56,7 +60,6 @@ class GraphCardState extends State<GraphCard> {
         color: theme.colorScheme.primary,
         child: Column(
           children: [
-            getPadding(5),
             titleOf(widget.name),
             entries.isNotEmpty
                 ? Container(
@@ -100,12 +103,18 @@ class GraphCardState extends State<GraphCard> {
                       //         labelStyle: smallStyle,
                       //         color: darkColor
                       //         ) : null,
-
                     ),
                   )
                 : errorOf('No data'),
-            ButtonBar(
+            Row(
               children: [
+                IconButton(
+                  onPressed: () {
+                    tapDelete(appState);
+                  },
+                  icon: const Icon(Icons.remove_circle_outline, color: white),
+                ),
+                const Spacer(),
                 IconButton(
                     onPressed: () {
                       makeDatumDialog();
@@ -120,10 +129,9 @@ class GraphCardState extends State<GraphCard> {
                 if (entries.isNotEmpty)
                   IconButton(
                       onPressed: () {
-                        
-
                         appState.types[widget.name] =
-                            GraphType.line.getNext(appState.types[widget.name]);
+                            GraphType.getNext(appState.types[widget.name]);
+                        editType(widget.name, appState.types[widget.name]);
                         appState.notify();
                       },
                       icon: const Icon(Icons.auto_graph, color: white))
@@ -141,7 +149,7 @@ class GraphCardState extends State<GraphCard> {
       barrierDismissible: true,
       context: context,
       builder: (BuildContext context) {
-        return DatumDialog(name: widget.name);
+        return DatumDialog(name: widget.name, data: widget.data);
       });
 
   makeDetailsDialog() => showDialog(
@@ -158,4 +166,31 @@ class GraphCardState extends State<GraphCard> {
   }
 
   getChartType() {}
+
+  void tapDelete(appState) {
+    final now = DateTime.now();
+    if (lastTapTime == null ||
+        now.difference(lastTapTime!) > const Duration(milliseconds: 500)) {
+      tapCount = 0;
+    }
+
+    tapCount++;
+    lastTapTime = now;
+
+    if (tapCount == 1) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Triple tap fast to delete'),
+        ),
+      );
+    } else if (tapCount == 3) {
+      eraseGraph(widget.name);
+
+      appState.names.remove(widget.name);
+      appState.data.remove(widget.name);
+      appState.types.remove(widget.name);
+
+      appState.notify();
+    }
+  }
 }

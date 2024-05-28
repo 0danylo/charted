@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:trend_notes/function_util.dart';
+import 'package:trend_notes/file_util.dart';
 import 'package:trend_notes/graph_card.dart';
 import 'package:trend_notes/main.dart';
 import 'package:trend_notes/style_util.dart';
@@ -29,7 +29,7 @@ class GraphDialogState extends State<GraphDialog> {
           mainAxisSize: MainAxisSize.min,
           children: [
             Title(
-                color: const Color.fromARGB(255, 106, 106, 106),
+                color: lightColor,
                 child: subtitleOf("New Graph")),
             TextFormField(
                 style: mediumStyle,
@@ -39,19 +39,19 @@ class GraphDialogState extends State<GraphDialog> {
             Text(
               newGraphName == ""
                   ? "Invalid name"
-                  : appState.names.contains(newGraphName)
+                  : widget.names.contains(newGraphName)
                       ? "Name already used"
                       : "",
               style: errorStyle,
             ),
             ElevatedButton(
                 onPressed:
-                    newGraphName == "" || appState.names.contains(newGraphName)
+                    newGraphName == "" || widget.names.contains(newGraphName)
                         ? null
                         : () {
-                            writeGraph(newGraphName, GraphType.lineWithPoints);
+                            writeGraph(newGraphName);
                             widget.names.add(newGraphName);
-                            widget.types[newGraphName] = GraphType.line;
+                            widget.types[newGraphName] = GraphType.lineWithPoints;
                             widget.data[newGraphName] =
                                 Map.of(<DateTime, double>{});
                             newGraphName = placeholderGraphName;

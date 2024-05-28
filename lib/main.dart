@@ -1,5 +1,8 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:trend_notes/file_util.dart';
 import 'package:trend_notes/graph_card.dart';
 import 'package:trend_notes/graph_dialog.dart';
 import 'package:trend_notes/style_util.dart';
@@ -19,8 +22,7 @@ class App extends StatelessWidget {
         title: 'Chartnote',
         theme: ThemeData(
           useMaterial3: true,
-          colorScheme: ColorScheme.fromSeed(
-              seedColor: const Color.fromARGB(255, 0, 100, 255)),
+          colorScheme: ColorScheme.fromSeed(seedColor: blue),
         ),
         home: const MainPage(),
       ),
@@ -29,12 +31,49 @@ class App extends StatelessWidget {
 }
 
 class AppState extends ChangeNotifier {
+  late dynamic file;
   List<String> names = List.empty(growable: true);
   Map<String, GraphType> types = {};
   Map<String, Map<DateTime, double>> data = {};
 
+  init() {
+    file = fileExists();
+
+    if (file) {
+      final contents = readFile();
+      final graphs = contents.split('\n\n');
+      for (var g in graphs) {
+        final firstLine = g[0];
+        final typeIndex = firstLine.lastIndexOf(' ') + 1;
+        final name = firstLine.substring(0, typeIndex);
+        final type = firstLine.substring(typeIndex);
+        names.add(name);
+        types[name] = type;
+
+        Map<DateTime, double> dataMap = {};
+        final dataList = g.sublist(1).split('\n');
+        for (var d in dataList) {
+          final data = d.split(' ');
+          dataMap[DateTime.fromMillisecondsSinceEpoch(data[0])] = double.parse(data[1]);
+        }
+
+        data[name] = dataMap;
+      }
+    }
+    print(file);
+  }
+
   void notify() {
     notifyListeners();
+  }
+
+  fileExists() async {
+    final file = await localFile;
+    if (file.exists()) {
+      return file;
+    }
+
+    return false;
   }
 }
 

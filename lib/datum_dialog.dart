@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
-import 'package:trend_notes/function_util.dart';
+import 'package:trend_notes/file_util.dart';
 import 'package:trend_notes/main.dart';
 import 'package:trend_notes/style_util.dart';
 
 class DatumDialog extends StatefulWidget {
-  const DatumDialog({super.key, required this.name});
-
   final String name;
+  final Map<DateTime, double> data;
+  
+  const DatumDialog({super.key, required this.name, required this.data});
 
   @override
   State<StatefulWidget> createState() => DatumDialogState();
@@ -43,7 +44,7 @@ class DatumDialogState extends State<DatumDialog> {
                       builder: (context, child) => Theme(
                           data: ThemeData.dark().copyWith(
                               colorScheme: const ColorScheme.dark(
-                                  primary: Color.fromARGB(255, 0, 100, 255),
+                                  primary: blue,
                                   secondary: lightColor)),
                           child: child!),
                     ).then(
@@ -66,7 +67,7 @@ class DatumDialogState extends State<DatumDialog> {
                         return Theme(
                             data: ThemeData.dark().copyWith(
                                 colorScheme: const ColorScheme.dark(
-                                    primary: Color.fromARGB(255, 0, 100, 255),
+                                    primary: blue,
                                     secondary: lightColor)),
                             child: MediaQuery(
                               data: MediaQuery.of(context)

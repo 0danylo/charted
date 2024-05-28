@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:trend_notes/file_util.dart';
 import 'package:trend_notes/graph_card.dart';
 import 'package:trend_notes/main.dart';
 import 'package:trend_notes/style_util.dart';
 
 class DetailsDialog extends StatefulWidget {
-  const DetailsDialog({super.key, required this.parent, required this.data});
-
   final GraphCard parent;
   final Map<DateTime, double> data;
+
+  const DetailsDialog({super.key, required this.parent, required this.data});
 
   @override
   State<StatefulWidget> createState() => DetailsDialogState();
@@ -39,8 +40,19 @@ class DetailsDialogState extends State<DetailsDialog> {
               largeStyled(formatDouble(entry.value)),
               IconButton(
                 onPressed: () {
-                  setState(() => widget.data.remove(entry.key));
-                  appState.notify();
+                  if (widget.data.length == 1) {
+                    Navigator.of(context).pop();
+                    Future.delayed(const Duration(milliseconds: 100), () {
+                      parent.data.remove(entry.key);
+                      appState.notify();
+                    });
+                  } else {
+                    setState(() {
+                      widget.data.remove(entry.key);
+                      eraseDatum(widget.parent.name, entry.key.millisecondsSinceEpoch);
+                      appState.notify();
+                    });
+                  }
                 },
                 icon:
                     const Icon(Icons.remove_circle_outline, color: Colors.red),

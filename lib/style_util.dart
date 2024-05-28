@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 const placeholderGraphName = "018eujosbnd8192er1hue";
 
+const blue = Color.fromARGB(255, 0, 100, 255);
 const darkColor = Color.fromARGB(255, 31, 31, 31);
 const lightColor = Color.fromARGB(255, 195, 195, 195);
 const white = Colors.white;
@@ -33,8 +34,6 @@ const months = [
   'Nov',
   'Dec'
 ];
-
-
 
 getSortedEntries(Map data) {
   var entries = data.entries.toList();
