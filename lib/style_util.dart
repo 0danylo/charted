@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 
 const placeholderGraphName = "018eujosbnd8192er1hue";
 
-const blue = Color.fromARGB(255, 0, 100, 255);
+const red = Color.fromARGB(255, 179, 25, 66);
+const blue = Color.fromARGB(255, 0, 98, 194);
 const darkColor = Color.fromARGB(255, 31, 31, 31);
 const lightColor = Color.fromARGB(255, 195, 195, 195);
 const white = Colors.white;
@@ -13,7 +14,7 @@ const mediumStyle = TextStyle(color: white, fontSize: 18);
 const largeStyle = TextStyle(color: white, fontSize: 24);
 const subtitleStyle = TextStyle(color: white, fontSize: 30);
 const titleStyle = TextStyle(color: white, fontSize: 40);
-const errorStyle = TextStyle(color: Colors.red);
+const errorStyle = TextStyle(color: red);
 const labelStyle = TextStyle(color: lightColor);
 
 const buttonStyle = ButtonStyle(
@@ -43,6 +44,10 @@ getSortedEntries(Map data) {
 
 getStepEntries(Map data) {
   var original = getSortedEntries(data);
+  if (original.isEmpty) {
+    return original;
+  }
+
   var newList = [original[0]];
 
   for (var i = 1; i < original.length; i++) {

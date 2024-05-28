@@ -54,7 +54,7 @@ class GraphCardState extends State<GraphCard> {
     var entries = getEntries();
 
     final card = Container(
-      padding: const EdgeInsets.fromLTRB(10, 10, 10, 0),
+      padding: const EdgeInsets.fromLTRB(10, 10, 10, 0,),
       child: Card(
         elevation: 10,
         color: theme.colorScheme.primary,
@@ -72,7 +72,7 @@ class GraphCardState extends State<GraphCard> {
                       color: [
                         GraphType.line,
                         GraphType.lineWithPoints,
-                        GraphType.step
+                        GraphType.step,
                       ].contains(widget.type)
                           ? white
                           : invisible,
@@ -80,14 +80,16 @@ class GraphCardState extends State<GraphCard> {
                       marker: SparkChartMarker(
                           displayMode: SparkChartMarkerDisplayMode.all,
                           size: 8,
-                          color: [GraphType.lineWithPoints, GraphType.points]
-                                  .contains(widget.type)
+                          color: [
+                            GraphType.lineWithPoints,
+                            GraphType.points,
+                          ].contains(widget.type)
                               ? darkColor
                               : invisible,
                           borderWidth: 1,
                           borderColor: [
                             GraphType.lineWithPoints,
-                            GraphType.points
+                            GraphType.points,
                           ].contains(widget.type)
                               ? white
                               : invisible),
@@ -112,7 +114,7 @@ class GraphCardState extends State<GraphCard> {
                   onPressed: () {
                     tapDelete(appState);
                   },
-                  icon: const Icon(Icons.remove_circle_outline, color: white),
+                  icon: const Icon(Icons.remove_circle_outline, color: red),
                 ),
                 const Spacer(),
                 IconButton(
@@ -131,7 +133,7 @@ class GraphCardState extends State<GraphCard> {
                       onPressed: () {
                         appState.types[widget.name] =
                             GraphType.getNext(appState.types[widget.name]);
-                        editType(widget.name, appState.types[widget.name]);
+                        editType(widget.name, appState.types[widget.name]!);
                         appState.notify();
                       },
                       icon: const Icon(Icons.auto_graph, color: white))
@@ -164,8 +166,6 @@ class GraphCardState extends State<GraphCard> {
         widget.type == GraphType.step ? getStepEntries : getSortedEntries;
     return entriesFunction(widget.data);
   }
-
-  getChartType() {}
 
   void tapDelete(appState) {
     final now = DateTime.now();

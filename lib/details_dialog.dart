@@ -49,14 +49,15 @@ class DetailsDialogState extends State<DetailsDialog> {
                   } else {
                     setState(() {
                       widget.data.remove(entry.key);
-                      eraseDatum(
-                          widget.parent.name, entry.key.millisecondsSinceEpoch);
                       appState.notify();
                     });
                   }
+                  
+                  eraseDatum(
+                      widget.parent.name, entry.key);
                 },
                 icon:
-                    const Icon(Icons.remove_circle_outline, color: Colors.red),
+                    const Icon(Icons.remove_circle_outline, color: red),
               )
             ])
         ],

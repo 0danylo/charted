@@ -101,13 +101,15 @@ class DatumDialogState extends State<DatumDialog> {
               onPressed: newDatum == null
                   ? null
                   : () {
+                      final newDateTime = DateTime(newDate.year, newDate.month,
+                          newDate.day, newTime.hour, newTime.minute);
+                          
                       appState.data.update(widget.name, (value) {
-                        value[DateTime(newDate.year, newDate.month, newDate.day,
-                            newTime.hour, newTime.minute)] = newDatum;
+                        value[newDateTime] = newDatum;
                         return value;
-                      }, ifAbsent: () => {newDate: newDatum});
+                      }, ifAbsent: () => {newDateTime: newDatum});
 
-                      writeDatum(widget.name, newDate, newDatum);
+                      writeDatum(widget.name, newDateTime, newDatum);
                       Navigator.of(context).pop();
                       appState.notify();
                     },
