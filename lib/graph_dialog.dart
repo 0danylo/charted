@@ -21,16 +21,14 @@ class GraphDialogState extends State<GraphDialog> {
 
   @override
   Widget build(BuildContext context) {
-    var appState = context.watch<AppState>();
+    var appState = context.watch<MainPageState>();
 
     return AlertDialog(
         backgroundColor: darkColor,
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Title(
-                color: lightColor,
-                child: subtitleOf("New Graph")),
+            Title(color: lightColor, child: subtitleOf("New Graph")),
             TextFormField(
                 style: mediumStyle,
                 decoration: const InputDecoration(
@@ -45,20 +43,20 @@ class GraphDialogState extends State<GraphDialog> {
               style: errorStyle,
             ),
             ElevatedButton(
-                onPressed:
-                    newGraphName == "" || widget.names.contains(newGraphName)
-                        ? null
-                        : () {
-                            writeGraph(newGraphName);
-                            widget.names.add(newGraphName);
-                            widget.types[newGraphName] = GraphType.lineWithPoints;
-                            widget.data[newGraphName] =
-                                Map.of(<DateTime, double>{});
-                            newGraphName = placeholderGraphName;
+                onPressed: newGraphName == "" ||
+                        widget.names.contains(newGraphName)
+                    ? null
+                    : () {
+                        writeGraph(newGraphName);
+                        widget.names.add(newGraphName);
+                        widget.types[newGraphName] = GraphType.lineWithPoints;
+                        widget.data[newGraphName] =
+                            Map.of(<DateTime, double>{});
+                        newGraphName = placeholderGraphName;
 
-                            Navigator.of(context).pop();
-                            appState.notify();
-                          },
+                        Navigator.of(context).pop();
+                        appState.notify();
+                      },
                 style: buttonStyle,
                 child: const Text("Create"))
           ],

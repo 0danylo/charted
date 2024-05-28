@@ -17,7 +17,7 @@ class App extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (context) => AppState(),
+      create: (context) => MainPageState(),
       child: MaterialApp(
         title: 'Chartnote',
         theme: ThemeData(
@@ -30,16 +30,25 @@ class App extends StatelessWidget {
   }
 }
 
-class AppState extends ChangeNotifier {
-  late dynamic file;
+class MainPageState extends State<MainPage> with ChangeNotifier {
   List<String> names = List.empty(growable: true);
   Map<String, GraphType> types = {};
   Map<String, Map<DateTime, double>> data = {};
 
-  init() {
-    file = fileExists();
+  @override
+  initState() {
+    super.initState();
+    loadFile();
+  }
 
-    if (file) {
+  void notify() {
+    notifyListeners();
+  }
+
+  loadFile() async {
+    final file = (await localFile).then()
+
+    if (file.exists()) {
       final contents = readFile();
       final graphs = contents.split('\n\n');
       for (var g in graphs) {
@@ -54,40 +63,18 @@ class AppState extends ChangeNotifier {
         final dataList = g.sublist(1).split('\n');
         for (var d in dataList) {
           final data = d.split(' ');
-          dataMap[DateTime.fromMillisecondsSinceEpoch(data[0])] = double.parse(data[1]);
+          dataMap[DateTime.fromMillisecondsSinceEpoch(data[0])] =
+              double.parse(data[1]);
         }
 
         data[name] = dataMap;
       }
     }
-    print(file);
   }
 
-  void notify() {
-    notifyListeners();
-  }
-
-  fileExists() async {
-    final file = await localFile;
-    if (file.exists()) {
-      return file;
-    }
-
-    return false;
-  }
-}
-
-class MainPage extends StatefulWidget {
-  const MainPage({super.key});
-
-  @override
-  State<MainPage> createState() => MainPageState();
-}
-
-class MainPageState extends State<MainPage> {
   @override
   Widget build(BuildContext context) {
-    var appState = context.watch<AppState>();
+    var appState = context.watch<MainPageState>();
 
     return Scaffold(
       backgroundColor: darkColor,
@@ -115,6 +102,17 @@ class MainPageState extends State<MainPage> {
     );
   }
 }
+
+class MainPage extends StatefulWidget {
+  const MainPage({super.key});
+
+  @override
+  State<MainPage> createState() => MainPageState();
+}
+
+// class MainPageState extends State<MainPage> {
+
+// }
 
 makeGraphDialog(context, names, types, data) => showDialog(
     barrierDismissible: true,

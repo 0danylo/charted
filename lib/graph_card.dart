@@ -48,7 +48,7 @@ class GraphCardState extends State<GraphCard> {
 
   @override
   Widget build(BuildContext context) {
-    var appState = context.watch<AppState>();
+    var appState = context.watch<MainPageState>();
     final theme = Theme.of(context);
 
     var entries = getEntries();

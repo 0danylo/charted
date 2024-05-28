@@ -18,7 +18,7 @@ class DetailsDialog extends StatefulWidget {
 class DetailsDialogState extends State<DetailsDialog> {
   @override
   Widget build(BuildContext context) {
-    var appState = context.watch<AppState>();
+    var appState = context.watch<MainPageState>();
 
     var parent = widget.parent;
     var entries = getSortedEntries(widget.data);
@@ -49,7 +49,8 @@ class DetailsDialogState extends State<DetailsDialog> {
                   } else {
                     setState(() {
                       widget.data.remove(entry.key);
-                      eraseDatum(widget.parent.name, entry.key.millisecondsSinceEpoch);
+                      eraseDatum(
+                          widget.parent.name, entry.key.millisecondsSinceEpoch);
                       appState.notify();
                     });
                   }

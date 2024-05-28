@@ -8,7 +8,7 @@ import 'package:trend_notes/style_util.dart';
 class DatumDialog extends StatefulWidget {
   final String name;
   final Map<DateTime, double> data;
-  
+
   const DatumDialog({super.key, required this.name, required this.data});
 
   @override
@@ -22,7 +22,7 @@ class DatumDialogState extends State<DatumDialog> {
 
   @override
   Widget build(BuildContext context) {
-    var appState = context.watch<AppState>();
+    var appState = context.watch<MainPageState>();
 
     return AlertDialog(
       backgroundColor: darkColor,
@@ -44,8 +44,7 @@ class DatumDialogState extends State<DatumDialog> {
                       builder: (context, child) => Theme(
                           data: ThemeData.dark().copyWith(
                               colorScheme: const ColorScheme.dark(
-                                  primary: blue,
-                                  secondary: lightColor)),
+                                  primary: blue, secondary: lightColor)),
                           child: child!),
                     ).then(
                         (value) => setState(() => newDate = value ?? newDate));
@@ -67,8 +66,7 @@ class DatumDialogState extends State<DatumDialog> {
                         return Theme(
                             data: ThemeData.dark().copyWith(
                                 colorScheme: const ColorScheme.dark(
-                                    primary: blue,
-                                    secondary: lightColor)),
+                                    primary: blue, secondary: lightColor)),
                             child: MediaQuery(
                               data: MediaQuery.of(context)
                                   .copyWith(alwaysUse24HourFormat: false),
