@@ -90,12 +90,12 @@ BEGIN
         BLOCK "040904e4"
         BEGIN
             VALUE "CompanyName", "com.example" "\0"
-            VALUE "FileDescription", "trend_notes" "\0"
+            VALUE "FileDescription", "charted" "\0"
             VALUE "FileVersion", VERSION_AS_STRING "\0"
-            VALUE "InternalName", "trend_notes" "\0"
+            VALUE "InternalName", "charted" "\0"
             VALUE "LegalCopyright", "Copyright (C) 2024 com.example. All rights reserved." "\0"
-            VALUE "OriginalFilename", "trend_notes.exe" "\0"
-            VALUE "ProductName", "trend_notes" "\0"
+            VALUE "OriginalFilename", "charted.exe" "\0"
+            VALUE "ProductName", "charted" "\0"
             VALUE "ProductVersion", VERSION_AS_STRING "\0"
         END
     END

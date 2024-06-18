@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:trend_notes/file_util.dart';
-import 'package:trend_notes/graph_card.dart';
-import 'package:trend_notes/main.dart';
-import 'package:trend_notes/style_util.dart';
+import 'package:charted/file_util.dart';
+import 'package:charted/graph_card.dart';
+import 'package:charted/main.dart';
+import 'package:charted/style_util.dart';
 
 class GraphDialog extends StatefulWidget {
   final List names;

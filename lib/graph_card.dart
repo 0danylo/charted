@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:syncfusion_flutter_charts/sparkcharts.dart';
-import 'package:trend_notes/datum_dialog.dart';
-import 'package:trend_notes/details_dialog.dart';
-import 'package:trend_notes/file_util.dart';
-import 'package:trend_notes/main.dart';
-import 'package:trend_notes/style_util.dart';
+import 'package:charted/datum_dialog.dart';
+import 'package:charted/details_dialog.dart';
+import 'package:charted/file_util.dart';
+import 'package:charted/main.dart';
+import 'package:charted/style_util.dart';
 
 enum GraphType {
   line,
@@ -54,7 +54,12 @@ class GraphCardState extends State<GraphCard> {
     var entries = getEntries();
 
     final card = Container(
-      padding: const EdgeInsets.fromLTRB(10, 10, 10, 0,),
+      padding: const EdgeInsets.fromLTRB(
+        10,
+        10,
+        10,
+        0,
+      ),
       child: Card(
         elevation: 10,
         color: theme.colorScheme.primary,

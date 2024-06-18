@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
-import 'package:trend_notes/file_util.dart';
-import 'package:trend_notes/main.dart';
-import 'package:trend_notes/style_util.dart';
+import 'package:charted/file_util.dart';
+import 'package:charted/main.dart';
+import 'package:charted/style_util.dart';
 
 class DatumDialog extends StatefulWidget {
   final String name;
@@ -103,7 +103,7 @@ class DatumDialogState extends State<DatumDialog> {
                   : () {
                       final newDateTime = DateTime(newDate.year, newDate.month,
                           newDate.day, newTime.hour, newTime.minute);
-                          
+
                       appState.data.update(widget.name, (value) {
                         value[newDateTime] = newDatum;
                         return value;

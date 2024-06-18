@@ -1,4 +1,4 @@
-package com.example.trend_notes
+package com.danylo.charted
 
 import io.flutter.embedding.android.FlutterActivity
 
