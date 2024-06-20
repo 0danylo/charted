@@ -96,20 +96,24 @@ class DatumDialogState extends State<DatumDialog> {
               newDatum = match != null ? double.parse(match.group(0)!) : null;
             }),
           ),
-          errorOf(newDatum == null ? 'Invalid value' : ''),
+          newDatum == null
+              ? errorOf('Invalid value')
+              : widget.data.keys.contains(coalesceDateTime(newDate, newTime))
+                  ? warningOf('Overwrite existing date/time?')
+                  : const Text(''),
           ElevatedButton(
               onPressed: newDatum == null
                   ? null
                   : () {
-                      final newDateTime = DateTime(newDate.year, newDate.month,
-                          newDate.day, newTime.hour, newTime.minute);
+                      final newDateTime = coalesceDateTime(newDate, newTime);
+                      writeDatum(widget.name, newDateTime, newDatum);
 
                       appState.data.update(widget.name, (value) {
                         value[newDateTime] = newDatum;
                         return value;
                       }, ifAbsent: () => {newDateTime: newDatum});
 
-                      writeDatum(widget.name, newDateTime, newDatum);
+                      newDate = placeholderDateTime;
                       Navigator.of(context).pop();
                       appState.notify();
                     },

@@ -108,12 +108,13 @@ class GraphCardState extends State<GraphCard> {
                               tooltipFormatter: (details) =>
                                   formatDouble(details.y!.toDouble())
                                       .toString(),
-                                      borderRadius: const BorderRadius.all(Radius.circular(10)),
+                              borderRadius:
+                                  const BorderRadius.all(Radius.circular(10)),
                               labelStyle: smallStyle,
                               borderColor: invisible,
                               backgroundColor: darkColor,
                               color: darkColor,
-                              width: 0,
+                              width: 1,
                             )
                           : null,
                     ),

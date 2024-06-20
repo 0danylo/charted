@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 const placeholderGraphName = "018eujosbnd8192er1hue";
+final placeholderDateTime = DateTime(1969);
 
 const red = Color.fromARGB(255, 179, 25, 66);
 const blue = Color.fromARGB(255, 0, 98, 194);
@@ -35,6 +36,9 @@ const months = [
   'Nov',
   'Dec'
 ];
+
+coalesceDateTime(DateTime date, TimeOfDay time) =>
+    DateTime(date.year, date.month, date.day, time.hour, time.minute);
 
 getSortedEntries(Map data) {
   var entries = data.entries.toList();
@@ -79,5 +83,7 @@ subtitleOf(String text) =>
 titleOf(String text) =>
     Text(text, style: titleStyle, textAlign: TextAlign.center);
 errorOf(String text) => Text(text, style: errorStyle);
+warningOf(String text) =>
+    Text(text, style: const TextStyle(color: Colors.amber));
 
 getPadding(double side) => Padding(padding: EdgeInsets.all(side));
