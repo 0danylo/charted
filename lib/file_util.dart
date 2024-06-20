@@ -1,6 +1,4 @@
 import 'dart:io';
-
-import 'package:flutter/foundation.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:charted/graph_card.dart';
 
@@ -26,10 +24,10 @@ readFile() async {
   return contents;
 }
 
-writeGraph(name) async {
+writeGraph(name, typeName) async {
   final file = await localFile;
 
-  file.writeAsString('$name lineWithPoints\n\n', mode: FileMode.append);
+  file.writeAsString('$name $typeName\n\n', mode: FileMode.append);
 }
 
 writeDatum(name, dateTime, datum) async {

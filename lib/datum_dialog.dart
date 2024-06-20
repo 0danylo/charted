@@ -99,7 +99,7 @@ class DatumDialogState extends State<DatumDialog> {
           newDatum == null
               ? errorOf('Invalid value')
               : widget.data.keys.contains(coalesceDateTime(newDate, newTime))
-                  ? warningOf('Overwrite existing date/time?')
+                  ? warningOf('Overwrite datum at this date/time?')
                   : const Text(''),
           ElevatedButton(
               onPressed: newDatum == null

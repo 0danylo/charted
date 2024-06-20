@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:charted/file_util.dart';
@@ -43,20 +45,25 @@ class GraphDialogState extends State<GraphDialog> {
               style: errorStyle,
             ),
             ElevatedButton(
-                onPressed: newGraphName == "" ||
-                        widget.names.contains(newGraphName)
-                    ? null
-                    : () {
-                        writeGraph(newGraphName);
-                        widget.names.add(newGraphName);
-                        widget.types[newGraphName] = GraphType.lineWithPoints;
-                        widget.data[newGraphName] =
-                            Map.of(<DateTime, double>{});
-                        newGraphName = placeholderGraphName;
+                onPressed:
+                    newGraphName == "" || widget.names.contains(newGraphName)
+                        ? null
+                        : () {
+                            final type = widget.names.isNotEmpty
+                                ? GraphType.values[
+                                    Random().nextInt(GraphType.values.length)]
+                                : GraphType.values[Random().nextInt(2) + 1];
 
-                        Navigator.of(context).pop();
-                        appState.notify();
-                      },
+                            writeGraph(newGraphName, type.name);
+                            widget.names.add(newGraphName);
+                            widget.types[newGraphName] = type;
+                            widget.data[newGraphName] =
+                                Map.of(<DateTime, double>{});
+                            newGraphName = placeholderGraphName;
+
+                            Navigator.of(context).pop();
+                            appState.notify();
+                          },
                 style: buttonStyle,
                 child: const Text("Create"))
           ],
