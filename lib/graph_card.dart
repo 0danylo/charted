@@ -103,13 +103,19 @@ class GraphCardState extends State<GraphCard> {
                                   widget.data.values.any((value) => value >= 0)
                               ? 2
                               : 0,
-                      // trackball: widget.type != GraphType.step ? SparkChartTrackball(
-                      //   borderColor: invisible,
-                      //     tooltipFormatter: (details) =>
-                      //         formatDouble(details.y!.toDouble()).toString(),
-                      //         labelStyle: smallStyle,
-                      //         color: darkColor
-                      //         ) : null,
+                      trackball: widget.type != GraphType.step
+                          ? SparkChartTrackball(
+                              tooltipFormatter: (details) =>
+                                  formatDouble(details.y!.toDouble())
+                                      .toString(),
+                                      borderRadius: const BorderRadius.all(Radius.circular(10)),
+                              labelStyle: smallStyle,
+                              borderColor: invisible,
+                              backgroundColor: darkColor,
+                              color: darkColor,
+                              width: 0,
+                            )
+                          : null,
                     ),
                   )
                 : errorOf('No data'),
