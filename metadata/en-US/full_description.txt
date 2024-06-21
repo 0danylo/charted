@@ -1,0 +1,7 @@
+Charted is a simple Material app that creates graphs of data over time.
+
+- Plot any decimal value against a date and time
+- Create unlimited graphs and points, and delete them at will
+- View graphs as a line, line with points, just points, or steps
+
+The interface is a single scrollable page and data is backed up locally in a legible file called "data.txt".
