@@ -1,7 +1,7 @@
 
 <p float="left">
-  <img src="https://github.com/0danylo/chartnote/assets/29526662/6bcfae79-8a44-44bf-a73d-de0715119ec0" width="200" />
-  <img src="https://github.com/0danylo/chartnote/assets/29526662/85a05ce4-5cb0-4370-b628-69adaed49c4c" width="200" /> 
-  <img src="https://github.com/0danylo/chartnote/assets/29526662/95be781d-ee15-497f-84e0-ac9dc3e2176c" width="200" />
-  <img src="https://github.com/0danylo/chartnote/assets/29526662/c3b888fe-5748-4301-a4ca-256fe4508ca0" width="200" />
+  <img src="https://github.com/0danylo/charted/assets/29526662/ae702b10-c7d1-43a2-996f-6784135fce4e" width="200" />
+  <img src="https://github.com/0danylo/charted/assets/29526662/1812c969-cce0-4d4b-9f0b-279b9dd396cb" width="200" />
+  <img src="https://github.com/0danylo/charted/assets/29526662/6d490dfc-eb7a-4dd9-81ef-bae6b3b0813a" width="200" /> 
+  <img src="https://github.com/0danylo/charted/assets/29526662/a870508a-8d62-41bd-91ee-f397159bc5ed" width="200" />
 </p>
