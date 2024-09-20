@@ -54,7 +54,7 @@ class MainPage extends StatelessWidget {
             onPressed: () => makeGraphDialog(
                 context, appState.names, appState.types, appState.data),
             style: buttonStyle.copyWith(
-              iconColor: MaterialStateProperty.resolveWith(
+              iconColor: WidgetStateProperty.resolveWith(
                 (states) => Theme.of(context).colorScheme.primary,
               ),
             ),

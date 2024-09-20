@@ -21,8 +21,8 @@ const warningStyle = TextStyle(color: yellow);
 const labelStyle = TextStyle(color: lightColor);
 
 const buttonStyle = ButtonStyle(
-    backgroundColor: MaterialStatePropertyAll(white),
-    textStyle: MaterialStatePropertyAll(mediumStyle));
+    backgroundColor: WidgetStatePropertyAll(white),
+    textStyle: WidgetStatePropertyAll(mediumStyle));
 
 const months = [
   'Jan',

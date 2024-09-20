@@ -5,6 +5,7 @@ version: 0.1.0+1
 
 environment:
   sdk: '>=3.3.4 <4.0.0'
+  flutter: "3.22.1"
 
 dependencies:
   fl_chart: ^0.68.0
